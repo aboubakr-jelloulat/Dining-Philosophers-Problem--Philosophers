@@ -2,6 +2,7 @@
 DTEAL       = \033[38;2;0;173;173m
 BYELLOW     = \033[1;33m
 BWHITE      = \033[1;37m
+BPURPLE     = \033[1;35m
 BCYAN       = \033[1;36m
 BGREEN      = \033[1;32m
 RESET       = \033[0m
@@ -32,8 +33,8 @@ UTILS_DIR   = utils/
 INC_DIR     = includes/
 
 # Source files
-SRC_FILES   = philo.c init_philosophers.c parse_arguments_and_check.c
-UTILS_FILES = atoi.c putstr_fd2.c system_time.c
+SRC_FILES   = philo.c init_philosophers.c parse_arguments_and_check.c dining_philos_problem.c  philo_actions.c solo_philo_handler.c
+UTILS_FILES = atoi.c putstr_fd2.c system_time.c display.c ft_usleep.c properties.c
 
 # Full paths
 SRCS        = $(addprefix $(SRC_DIR), $(SRC_FILES))
@@ -43,7 +44,7 @@ HEADERS     = $(addprefix $(INC_DIR), philo.h ph_macros.h ph_prototype.h ph_stru
 # All source files 
 ALL_SRCS    = $(SRCS) $(UTILS)
 
-# Object files 
+# Object files
 OBJS        = $(ALL_SRCS:.c=.o)
 
 # Rules

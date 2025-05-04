@@ -2,17 +2,17 @@
 
 static void	init_mutex(t_table *table)
 {
+	pthread_mutex_init(&table->print_mutex, NULL); // only this is changed
+	pthread_mutex_init(&table->stop_flag_mutex, NULL); // also this is change  stop simulation two
 	pthread_mutex_init(&table->stop_mutex, NULL);
 	pthread_mutex_init(&table->table_ready, NULL);
-	pthread_mutex_init(&table->mutex_print, NULL); // only this is changed
 	pthread_mutex_init(&table->mutex_stop_simlation, NULL);
-	pthread_mutex_init(&table->stop_simlation_two, NULL);
 	pthread_mutex_init(&table->check_dead, NULL);
 	pthread_mutex_init(&table->chang_time, NULL);
 	pthread_mutex_init(&table->inc_meals, NULL);
 }
 
-static int	init_thread_and_mutex(t_table *table)
+static int	init_data_and_mutex(t_table *table)
 {
 	int	u;
 
@@ -47,7 +47,12 @@ void	init_philosophers(int ac, char *av[])
 
 	if (parse_arguments_and_check(ac, av, &table))
 		return ;
-	if (init_thread_and_mutex(&table))
+	if (init_data_and_mutex(&table))
 		return ;
+	if (table.num_philosophers == 1)
+		solo_philo(&table);
+	
+	
+
 	
 }
