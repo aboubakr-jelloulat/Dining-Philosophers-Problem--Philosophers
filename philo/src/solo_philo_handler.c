@@ -19,9 +19,9 @@ void	*solo_death_lifecycle(void *args)
 
 	table = (t_table *)args;
 	table->start_simulation = this_time();
-	display(time_since_creation(table), table->philos[0].philo_id, MSG_FORK);
+	printf(CYAN "%lld\t%d\t%s\n\n" RESET, time_since_creation(table), 1, MSG_FORK);
 	ft_usleep(table->time_to_die, table->philos);
-	display(time_since_creation(table), table->philos[0].philo_id, MSG_DIED);
+	printf(CYAN "%lld\t%d\t%s\n\n" RESET, time_since_creation(table), 1, MSG_DIED);
 	return (NULL);
 }
 

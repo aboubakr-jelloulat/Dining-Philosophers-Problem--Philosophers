@@ -1,15 +1,41 @@
 #include "../includes/philo.h"
 
+static void	join_and_cleanup(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->num_philosophers)
+		pthread_join(table->philos[i++].th, NULL);
+	i = 0;
+	while (i < table->num_philosophers)
+		pthread_mutex_destroy(&table->forks[i++]);
+	
+	pthread_mutex_destroy(&table->print_mutex);
+	pthread_mutex_destroy(&table->stop_flag_mutex);
+	pthread_mutex_destroy(&table->mutex_stop_simlation);
+	pthread_mutex_destroy(&table->philo_is_died_mutex);
+	pthread_mutex_destroy(&table->mutex_stop_simlation);
+	pthread_mutex_destroy(&table->check_dead);
+	pthread_mutex_destroy(&table->last_meal_mutex);
+	pthread_mutex_destroy(&table->meals_eaten_mutex);
+	free (table->philos);
+	table->philos = NULL;
+	free (table->forks);
+	table->forks = NULL;
+}
+
+
 static void	init_mutex(t_table *table)
 {
-	pthread_mutex_init(&table->print_mutex, NULL); // only this is changed
-	pthread_mutex_init(&table->stop_flag_mutex, NULL); // also this is change  stop simulation two
-	pthread_mutex_init(&table->stop_mutex, NULL);
-	pthread_mutex_init(&table->table_ready, NULL);
+	pthread_mutex_init(&table->print_mutex, NULL);
+	pthread_mutex_init(&table->stop_flag_mutex, NULL);
+	pthread_mutex_init(&table->mutex_stop_simlation, NULL);
+	pthread_mutex_init(&table->philo_is_died_mutex, NULL);
 	pthread_mutex_init(&table->mutex_stop_simlation, NULL);
 	pthread_mutex_init(&table->check_dead, NULL);
-	pthread_mutex_init(&table->chang_time, NULL);
-	pthread_mutex_init(&table->inc_meals, NULL);
+	pthread_mutex_init(&table->last_meal_mutex, NULL);
+	pthread_mutex_init(&table->meals_eaten_mutex, NULL);
 }
 
 static int	init_data_and_mutex(t_table *table)
@@ -26,7 +52,7 @@ static int	init_data_and_mutex(t_table *table)
 	init_mutex(table);
 	table->is_die = false;
 	table->simulation_run = 1;
-	table->stop_simulation = 0;
+	table->died_philo = 0;
 	while (u < table->num_philosophers)
 	{
 		table->philos[u].philo_id = u + 1;
@@ -51,8 +77,7 @@ void	init_philosophers(int ac, char *av[])
 		return ;
 	if (table.num_philosophers == 1)
 		solo_philo(&table);
-	
-	
-
-	
+	else
+		dining_philos_problem(&table);
+	join_and_cleanup(&table);
 }
