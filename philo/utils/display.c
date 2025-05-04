@@ -2,7 +2,8 @@
 
 void	display(t_philo *philo, const char *action)
 {
-	pthread_mutex_lock(&philo->table->simulation_run_mutex);
+	/* Use philo_is_died_mutex consistently for died_philo */
+	pthread_mutex_lock(&philo->table->philo_is_died_mutex);
 	if (!philo->table->died_philo)
 	{
 		pthread_mutex_lock(&philo->table->print_mutex);
@@ -10,5 +11,5 @@ void	display(t_philo *philo, const char *action)
 			philo->philo_id, action);
 		pthread_mutex_unlock(&philo->table->print_mutex);
 	}
-	pthread_mutex_unlock(&philo->table->simulation_run_mutex);
+	pthread_mutex_unlock(&philo->table->philo_is_died_mutex);
 }

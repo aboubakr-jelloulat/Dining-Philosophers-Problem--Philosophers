@@ -3,13 +3,18 @@
 void	ft_usleep(int required_tm, t_philo *philo)
 {
 	long long	start_tm;
+	int		died;
 
 	start_tm = this_time();
 	while ((this_time() - start_tm) < required_tm)
 	{
-		if (get_value(&philo->table->stop_flag_mutex,
-				&philo->table->died_philo))
-			break ;
-		usleep (500);
+		/* Lock the mutex before reading died_philo */
+		pthread_mutex_lock(&philo->table->philo_is_died_mutex);
+		died = philo->table->died_philo;
+		pthread_mutex_unlock(&philo->table->philo_is_died_mutex);
+	
+		if (died)
+			break;
+		usleep(500);
 	}
 }

@@ -1,4 +1,3 @@
-# Colors for terminal output
 DTEAL       = \033[38;2;0;173;173m
 BYELLOW     = \033[1;33m
 BWHITE      = \033[1;37m
@@ -8,7 +7,10 @@ BGREEN      = \033[1;32m
 RESET       = \033[0m
 
 
-# ASCII Art for philosophers
+# multi-line variable : 
+# Because Makefiles normally allow only one line per variable. 
+# If you try to write a multi-line string without define, make doesn't know how to handle the line breaks
+
 define PHILO_ART
 $(DTEAL)██████╗ ██╗  ██╗██╗██╗      ██████╗ ███████╗ ██████╗ ██████╗ ██╗  ██╗██╗██████╗ ███████╗██████╗ ███████╗$(RESET)
 $(DTEAL)██╔══██╗██║  ██║██║██║     ██╔═══██╗██╔════╝██╔═══██╗██╔══██╗██║  ██║██║██╔══██╗██╔════╝██╔══██╗██╔════╝$(RESET)
@@ -19,24 +21,28 @@ $(DTEAL)╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝ ╚�
 endef
 
 export PHILO_ART
+# By default, Makefile variables are not passed to subshells unless you export them
 
-# Project configuration
+
+
 NAME        = philo
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror
-PTHREAD     = -pthread
+CFLAGS      = -Wall -Wextra -Werror #-fsanitize=thread
+#PTHREAD     = -pthread
 RM          = rm -rf
 
-# Directories
+
 SRC_DIR     = src/
 UTILS_DIR   = utils/
 INC_DIR     = includes/
 
-# Source files
+
 SRC_FILES   = philo.c init_philosophers.c parse_arguments_and_check.c dining_philos_problem.c  philo_actions.c solo_philo_handler.c
 UTILS_FILES = atoi.c putstr_fd2.c system_time.c display.c ft_usleep.c properties.c
 
-# Full paths
+
+# containate the path  become a full source file
+
 SRCS        = $(addprefix $(SRC_DIR), $(SRC_FILES))
 UTILS       = $(addprefix $(UTILS_DIR), $(UTILS_FILES))
 HEADERS     = $(addprefix $(INC_DIR), philo.h ph_macros.h ph_prototype.h ph_structs.h)
@@ -44,10 +50,10 @@ HEADERS     = $(addprefix $(INC_DIR), philo.h ph_macros.h ph_prototype.h ph_stru
 # All source files 
 ALL_SRCS    = $(SRCS) $(UTILS)
 
-# Object files
+
 OBJS        = $(ALL_SRCS:.c=.o)
 
-# Rules
+
 all: $(NAME)
 
 # Compile each source file
@@ -60,6 +66,9 @@ $(NAME): $(OBJS)
 	@$(CC) $(CFLAGS) $(PTHREAD) $(OBJS) -o $(NAME)
 	@echo "$(BGREEN)✅ $(NAME) successfully compiled!$(RESET)"
 	@echo "$${PHILO_ART}"
+
+# @echo "$$PHILO_ART" is executed inside a subshell 
+# If you don't use export PHILO_ART, the ASCII art will not appear
 
 clean:
 	@$(RM) $(OBJS)

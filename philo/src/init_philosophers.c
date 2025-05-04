@@ -10,18 +10,17 @@ static void	join_and_cleanup(t_table *table)
 	i = 0;
 	while (i < table->num_philosophers)
 		pthread_mutex_destroy(&table->forks[i++]);
-	
 	pthread_mutex_destroy(&table->print_mutex);
 	pthread_mutex_destroy(&table->stop_flag_mutex);
 	pthread_mutex_destroy(&table->mutex_stop_simlation);
 	pthread_mutex_destroy(&table->philo_is_died_mutex);
-	pthread_mutex_destroy(&table->mutex_stop_simlation);
 	pthread_mutex_destroy(&table->check_dead);
 	pthread_mutex_destroy(&table->last_meal_mutex);
 	pthread_mutex_destroy(&table->meals_eaten_mutex);
-	free (table->philos);
+	pthread_mutex_destroy(&table->simulation_run_mutex);
+	free(table->philos);
 	table->philos = NULL;
-	free (table->forks);
+	free(table->forks);
 	table->forks = NULL;
 }
 
@@ -32,10 +31,12 @@ static void	init_mutex(t_table *table)
 	pthread_mutex_init(&table->stop_flag_mutex, NULL);
 	pthread_mutex_init(&table->mutex_stop_simlation, NULL);
 	pthread_mutex_init(&table->philo_is_died_mutex, NULL);
-	pthread_mutex_init(&table->mutex_stop_simlation, NULL);
+	/* Removed duplicate initialization of mutex_stop_simlation */
 	pthread_mutex_init(&table->check_dead, NULL);
 	pthread_mutex_init(&table->last_meal_mutex, NULL);
 	pthread_mutex_init(&table->meals_eaten_mutex, NULL);
+	/* Add missing mutex */
+	pthread_mutex_init(&table->simulation_run_mutex, NULL);
 }
 
 static int	init_data_and_mutex(t_table *table)
