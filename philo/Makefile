@@ -32,8 +32,8 @@ UTILS_DIR   = utils/
 INC_DIR     = includes/
 
 # Source files
-SRC_FILES   = philo.c init_philosophers.c
-UTILS_FILES = atoi.c putstr_fd2.c
+SRC_FILES   = philo.c init_philosophers.c parse_arguments_and_check.c
+UTILS_FILES = atoi.c putstr_fd2.c system_time.c
 
 # Full paths
 SRCS        = $(addprefix $(SRC_DIR), $(SRC_FILES))

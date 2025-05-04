@@ -13,7 +13,7 @@ typedef struct s_table
 
 	long long		start_simulation;
 	long long		simulation_run;
-	long long		stop_simulation;
+	long long		stop_simulation; // stop
 
 	bool			is_die;
 	bool			ready;
@@ -21,9 +21,9 @@ typedef struct s_table
 	t_philo			*philos;
 
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	print_lock;
+	pthread_mutex_t	mutex_print;
 	pthread_mutex_t	table_ready;
-	pthread_mutex_t	stop_simlation;
+	pthread_mutex_t	mutex_stop_simlation;
 	pthread_mutex_t	stop_simlation_two;
 	pthread_mutex_t	stop_mutex;
 	pthread_mutex_t	chang_time;

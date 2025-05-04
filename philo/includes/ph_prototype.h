@@ -11,5 +11,8 @@ int	ft_atoi(const char *str);
 void	init_philosophers(int ac, char *av[]);
 int	parse_arguments_and_check(int ac, char **av, t_table *table);
 
+long long	time_since_creation(t_philo *philo);
+long long	this_time(void);
+
 
 #endif
