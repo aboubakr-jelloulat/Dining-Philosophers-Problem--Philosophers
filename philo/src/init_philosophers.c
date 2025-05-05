@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_philosophers.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ajelloul <ajelloul@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/05 20:04:35 by ajelloul          #+#    #+#             */
+/*   Updated: 2025/05/05 20:04:36 by ajelloul         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 static void	join_and_cleanup(t_table *table)
@@ -24,18 +36,15 @@ static void	join_and_cleanup(t_table *table)
 	table->forks = NULL;
 }
 
-
 static void	init_mutex(t_table *table)
 {
 	pthread_mutex_init(&table->print_mutex, NULL);
 	pthread_mutex_init(&table->stop_flag_mutex, NULL);
 	pthread_mutex_init(&table->mutex_stop_simlation, NULL);
 	pthread_mutex_init(&table->philo_is_died_mutex, NULL);
-	/* Removed duplicate initialization of mutex_stop_simlation */
 	pthread_mutex_init(&table->check_dead, NULL);
 	pthread_mutex_init(&table->last_meal_mutex, NULL);
 	pthread_mutex_init(&table->meals_eaten_mutex, NULL);
-	/* Add missing mutex */
 	pthread_mutex_init(&table->simulation_run_mutex, NULL);
 }
 

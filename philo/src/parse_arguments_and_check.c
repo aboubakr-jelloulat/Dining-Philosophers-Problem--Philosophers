@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_arguments_and_check.c                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ajelloul <ajelloul@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/05 20:01:46 by ajelloul          #+#    #+#             */
+/*   Updated: 2025/05/05 20:01:53 by ajelloul         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 int	is_valid_argument(int ac, t_table *table)
@@ -14,7 +26,6 @@ int	is_valid_argument(int ac, t_table *table)
 		return (putstr_fd2(ERR_TIMES_MUST_EAT));
 	return (0);
 }
-
 
 int	parse_arguments_and_check(int ac, char **av, t_table *table)
 {

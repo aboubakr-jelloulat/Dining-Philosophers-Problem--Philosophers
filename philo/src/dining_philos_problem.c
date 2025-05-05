@@ -1,23 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dining_philos_problem.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ajelloul <ajelloul@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/05 20:07:55 by ajelloul          #+#    #+#             */
+/*   Updated: 2025/05/05 20:21:53 by ajelloul         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
-static	void	*routine(void	*args)
-{
-	t_philo	*philo;
-
-	philo = (t_philo *)args;
-	if (philo->philo_id % 2 == 0)
-		ft_usleep(philo->table->time_to_eat / 2, philo);
-	while (true)
-	{
-		if (get_value(&philo->table->philo_is_died_mutex, &philo->table->died_philo))
-			break;
-		if (!get_value(&philo->table->stop_flag_mutex, &philo->table->simulation_run))
-			break;
-		eating(philo);
-		sleep_and_think(philo);
-	}
-	return (NULL);
-}
+/* 1 - Create a separate monitor thread instead of running in main thread */
 
 static void	meals_required(t_table *table)
 {
@@ -29,11 +24,9 @@ static void	meals_required(t_table *table)
 	cnt = 0;
 	while (i < table->num_philosophers)
 	{
-		/* Lock the meals_eaten_mutex before reading meals_eaten */
 		pthread_mutex_lock(&table->meals_eaten_mutex);
 		meals = table->philos[i].meals_eaten;
 		pthread_mutex_unlock(&table->meals_eaten_mutex);
-		
 		if (meals >= table->tm_each_philosopher_must_eat)
 			cnt++;
 		i++;
@@ -45,13 +38,8 @@ static void	meals_required(t_table *table)
 	}
 }
 
-
-static void	lmonitor_ya_lmonitor(t_table *table)
+static void	lmonitor_ya_lmonitor(t_table *table, int i)
 {
-	int	i;
-	int	run_simulation;
-
-	/* Check simulation_run using the correct mutex */
 	while (get_value(&table->stop_flag_mutex, &table->simulation_run))
 	{
 		i = 0;
@@ -64,17 +52,14 @@ static void	lmonitor_ya_lmonitor(t_table *table)
 				set_value(&table->philo_is_died_mutex, &table->died_philo, 1);
 				set_value(&table->stop_flag_mutex, &table->simulation_run, 0);
 				pthread_mutex_lock(&table->print_mutex);
-				printf(CYAN "%lld\t%d\t%s\n\n" RESET, 
+				printf(CYAN "%lld\t%d\t%s\n\n" RESET,
 					time_since_creation(table), i + 1, MSG_DIED);
-				//pthread_mutex_unlock(&table->print_mutex);
-				return;
+				return ;
 			}
 			pthread_mutex_unlock(&table->last_meal_mutex);
 			i++;
 		}
-		/* Use the correct mutex for simulation_run */
-		run_simulation = get_value(&table->stop_flag_mutex, &table->simulation_run);
-		if (!run_simulation)
+		if (!get_value(&table->stop_flag_mutex, &table->simulation_run))
 			return ;
 		if (table->tm_each_philosopher_must_eat != -42)
 			meals_required(table);
@@ -86,7 +71,28 @@ static void	*monitor_routine(void *args)
 	t_table	*table;
 
 	table = (t_table *)args;
-	lmonitor_ya_lmonitor(table);
+	lmonitor_ya_lmonitor(table, 0);
+	return (NULL);
+}
+
+static	void	*routine(void	*args)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)args;
+	if (philo->philo_id % 2 == 0)
+		ft_usleep(philo->table->time_to_eat / 2, philo);
+	while (true)
+	{
+		if (get_value(&philo->table->philo_is_died_mutex,
+				&philo->table->died_philo))
+			break ;
+		if (!get_value(&philo->table->stop_flag_mutex,
+				&philo->table->simulation_run))
+			break ;
+		eating(philo);
+		sleep_and_think(philo);
+	}
 	return (NULL);
 }
 
@@ -103,7 +109,6 @@ void	dining_philos_problem(t_table *table)
 		pthread_create(&table->philos[u].th, NULL, routine, &table->philos[u]);
 		u++;
 	}
-	/* Create a separate monitor thread instead of running in main thread */
 	pthread_create(&monitor_thread, NULL, monitor_routine, table);
 	pthread_detach(monitor_thread);
 }

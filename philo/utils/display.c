@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   display.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ajelloul <ajelloul@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/05 19:56:28 by ajelloul          #+#    #+#             */
+/*   Updated: 2025/05/05 19:56:31 by ajelloul         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 void	display(t_philo *philo, const char *action)
 {
-	/* Use philo_is_died_mutex consistently for died_philo */
 	pthread_mutex_lock(&philo->table->philo_is_died_mutex);
 	if (!philo->table->died_philo)
 	{
